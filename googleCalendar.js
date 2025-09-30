@@ -3,7 +3,7 @@ import "dotenv/config";
 import "moment/locale/fr.js";
 import moment from "moment";
 
-
+// Fetches the next 20 events from Google Calendar and returns them as formatted strings
 export async function listEvents() {
     const auth = new google.auth.GoogleAuth({
         credentials: {
@@ -38,7 +38,7 @@ export async function listEvents() {
 }
 
 
-
+// Adds a new event to Google Calendar with the given shop, title, start, and end time
 export async function addEvents(boutique ,evenement,start,end) {
     let summary = boutique +" : " + evenement ;
     const auth = new google.auth.GoogleAuth({

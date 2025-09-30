@@ -189,31 +189,40 @@ client.on(Events.InteractionCreate, async interaction => {
             const allEvents = events.join("\n")
             console.log(events.length)
 
-            const manyEnvent = new EmbedBuilder()
-                .setColor(0x0099FF)
-                .setTitle('📅 Liste des événements')
-                .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
-                .setDescription(allEvents)
-                .setTimestamp()
 
-            const oneEvent = new EmbedBuilder()
-                .setColor(0x0099FF)
-                .setTitle('📅 Événement à venir')
-                .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
-                .setDescription(allEvents)
-                .setTimestamp()
+            if (events.length > 0) {
+
+                const manyEvent = new EmbedBuilder()
+                    .setColor(0x0099FF)
+                    .setTitle('📅 Liste des événements')
+                    .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                    .setDescription(allEvents)
+                    .setTimestamp()
+
+                const oneEvent = new EmbedBuilder()
+                    .setColor(0x0099FF)
+                    .setTitle('📅 Événement à venir')
+                    .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                    .setDescription(allEvents)
+                    .setTimestamp()
+
+                if (events.length === 1) {
+
+                    await interaction.reply({ embeds: [oneEvent], ephemeral: true });
 
 
-            if (events.length === 1) {
-
-                await interaction.reply({ embeds: [oneEvent], ephemeral: true });
+                } else {
+                    await interaction.reply({ embeds: [manyEvent], ephemeral: true });
+                }
 
             } else {
-                await interaction.reply({ embeds: [manyEnvent], ephemeral: true });
+                await interaction.reply({ content: 'Il n\'y a pas d\'événement pour le moment.', ephemeral: true });
             }
 
 
+
         } catch (error) {
+            console.error('Erreur lors de la récupération des événements :', error);
 
         }
 
@@ -221,25 +230,6 @@ client.on(Events.InteractionCreate, async interaction => {
 
     }
 });
-
-
-// async function testListEvent() {
-//            let allEvents = ""
-
-//     try {
-//       listEvents().then(events=>{
-//         allEvents =  events.join("\n")
-//           return allEvents;        
-//        })
-
-
-//     } catch (err) {
-//         console.log('voici l\'erreur', err);
-
-//     }
-// }
-
-// testListEvent();
 
 
 //On connecte le bot
