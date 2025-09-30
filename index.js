@@ -115,7 +115,7 @@ client.on(Events.InteractionCreate, async interaction => {
             dateMoment = m.format('LL')
             dateDay = m.format("YYYY-MM-DD")
         }
-        
+
 
         if (startEvent) {
             const m = moment(startEvent, "HH:mm", true);
@@ -158,37 +158,88 @@ client.on(Events.InteractionCreate, async interaction => {
             .setTitle('📅 Nouvel événement ajouté : ' + eventName)
             .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
             .setAuthor({ name: storeName, iconURL: iconUSer })
-            .setDescription(eventName + " par " + storeName + " le " + dateMoment )
-        .addFields(
-            { name: 'Debut : ', value: startHour , inline: true },
-            { name: 'Fin : ', value: hourEnd, inline: true },
-        )
+            .setDescription(eventName + " par " + storeName + " le " + dateMoment)
+            .addFields(
+                { name: 'Debut : ', value: startHour, inline: true },
+                { name: 'Fin : ', value: hourEnd, inline: true },
+            )
             .setTimestamp()
 
 
-        await addEvents(storeName, eventName, dateSend,dateEnd)
+        await addEvents(storeName, eventName, dateSend, dateEnd)
 
 
         await interaction.reply({ embeds: [messageEmbed] });
-        
+
     }
 });
 
+//Affiche les 20 derniers événements
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
+
+
     if (interaction.commandName === 'see-event') {
-        await interaction.reply({
-            content: 'listEvents'
-        });
+
+
+        try {
+            const events = await listEvents();
+            const allEvents = events.join("\n")
+            console.log(events.length)
+
+            const manyEnvent = new EmbedBuilder()
+                .setColor(0x0099FF)
+                .setTitle('📅 Liste des événements')
+                .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                .setDescription(allEvents)
+                .setTimestamp()
+
+            const oneEvent = new EmbedBuilder()
+                .setColor(0x0099FF)
+                .setTitle('📅 Événement à venir')
+                .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                .setDescription(allEvents)
+                .setTimestamp()
+
+
+            if (events.length === 1) {
+
+                await interaction.reply({ embeds: [oneEvent], ephemeral: true });
+
+            } else {
+                await interaction.reply({ embeds: [manyEnvent], ephemeral: true });
+            }
+
+
+        } catch (error) {
+
+        }
+
+
+
     }
 });
 
 
+// async function testListEvent() {
+//            let allEvents = ""
+
+//     try {
+//       listEvents().then(events=>{
+//         allEvents =  events.join("\n")
+//           return allEvents;        
+//        })
 
 
+//     } catch (err) {
+//         console.log('voici l\'erreur', err);
 
+//     }
+// }
+
+// testListEvent();
 
 
 //On connecte le bot

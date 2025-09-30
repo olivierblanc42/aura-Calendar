@@ -1,5 +1,7 @@
 import { google } from "googleapis";
 import "dotenv/config";
+import "moment/locale/fr.js";
+import moment from "moment";
 
 
 export async function listEvents() {
@@ -22,16 +24,23 @@ export async function listEvents() {
         orderBy: 'startTime'
     });
 
-    // const events = res.data.items || [];
-    // return events.map(ev => `${ev.start?.dateTime || ev.start?.date} - ${ev.summary}`);
-    const event = res.data.items;
-    return console.log(event)
+    const events = res.data.items || [];
+    
+
+
+ const   eventsList =  events.map(
+        
+     ev => `${ev.summary}, le ${moment(ev.start?.dateTime).format('LLL')} `
+
+    );
+     
+    return eventsList;
 }
 
 
 
 export async function addEvents(boutique ,evenement,start,end) {
-    let summary = boutique +": " + evenement ;
+    let summary = boutique +" : " + evenement ;
     const auth = new google.auth.GoogleAuth({
         credentials: {
             type: 'service_account',
