@@ -102,6 +102,9 @@ client.on(Events.InteractionCreate, async interaction => {
         let hourEnd = 'Non précisée';
         let dateEnd = 'Non précisée';
         let dateSend = 'Non précisée';
+        let iconUSer = interaction.user.avatarURL()
+
+
         if (dateEvent) {
             const m = moment(dateEvent, "DD-MM-YYYY", true);
 
@@ -150,21 +153,24 @@ client.on(Events.InteractionCreate, async interaction => {
         - Événement : ${eventName}
         - Date : ${dateMoment}
         `
+        const messageEmbed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle('📅 Nouvel événement ajouté : ' + eventName)
+            .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+            .setAuthor({ name: storeName, iconURL: iconUSer })
+            .setDescription(eventName + " par " + storeName + " le " + dateMoment )
+        .addFields(
+            { name: 'Debut : ', value: startHour , inline: true },
+            { name: 'Fin : ', value: hourEnd, inline: true },
+        )
+            .setTimestamp()
 
+
+        await addEvents(storeName, eventName, dateSend,dateEnd)
+
+
+        await interaction.reply({ embeds: [messageEmbed] });
         
-        // await addEvents(storeName, eventName, dateSend,dateEnd)
-
-        await interaction.reply(message);
-        
-    }
-});
-
-
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'ping') {
-        await interaction.reply('Pong!');
     }
 });
 
@@ -175,23 +181,12 @@ client.on(Events.InteractionCreate, async interaction => {
     if (interaction.commandName === 'see-event') {
         await interaction.reply({
             content: 'listEvents'
-
         });
     }
 });
 
 
-// async function testcalendar() {
-//     try {
-//         const event = await addEvents()
-//         console.log('bon', event)
-//     } catch (err) {
-//         console.log('pas bon', err);
 
-//     }
-// }
-
-// testcalendar();
 
 
 
