@@ -1,0 +1,18 @@
+{
+  "name": "aura-calendar",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Olivier Blanc",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.2",
+    "googleapis": "^160.0.0",
+    "moment": "^2.30.1"
+  }
+}
