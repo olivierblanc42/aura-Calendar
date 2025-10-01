@@ -7,6 +7,7 @@ import moment from "moment";
 import "moment/locale/fr.js";
 import "dotenv/config";
 import { listEvents, addEvents } from './googleCalendar.js';
+import { content } from "googleapis/build/src/apis/content/index.js";
 
 moment.locale("fr");
 
@@ -89,89 +90,111 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === 'event') {
-        // console.log(interaction.command);
-        let eventName = interaction.options.getString("event-name");
-        let storeName = interaction.options.getString("store");
-        let dateEvent = interaction.options.getString("date");
-        let startEvent = interaction.options.getString("start-event")
-        let endEvent = interaction.options.getString("end-event")
-        let dateMoment = 'Non précisée';
-        let dateDay = 'Non précisée';
-        let startHour = 'Non précisée';
-        let hourEnd = 'Non précisée';
-        let dateEnd = 'Non précisée';
-        let dateSend = 'Non précisée';
-        let iconUSer = interaction.user.avatarURL()
+    const member = interaction.member.roles.cache;
+    let userName = member.map((role) => role.name);
+    const modo = (element) => element === "Moderateur"
+    const boutique = (element) => element === "Gérant boutique"
 
 
-        if (dateEvent) {
-            const m = moment(dateEvent, "DD-MM-YYYY", true);
 
-            if (!m.isValid()) {
-                await interaction.reply("❌ Date invalide ! Utilise le format DD-MM-YYYY");
+
+    if (userName.some(modo) || userName.some(boutique)) {
+        if (interaction.commandName === 'event') {
+            let eventName = interaction.options.getString("event-name");
+            let storeName = interaction.options.getString("store");
+            let dateEvent = interaction.options.getString("date");
+            let startEvent = interaction.options.getString("start-event")
+            let endEvent = interaction.options.getString("end-event")
+            let dateMoment = 'Non précisée';
+            let dateDay = 'Non précisée';
+            let startHour = 'Non précisée';
+            let hourEnd = 'Non précisée';
+            let dateEnd = 'Non précisée';
+            let dateSend = 'Non précisée';
+            let iconUSer = interaction.user.avatarURL()
+
+
+            if (dateEvent) {
+                const m = moment(dateEvent, "DD-MM-YYYY", true);
+
+                if (!m.isValid()) {
+                    await interaction.reply("❌ Date invalide ! Utilise le format DD-MM-YYYY");
+                    return;
+                }
+                dateMoment = m.format('LL')
+                dateDay = m.format("YYYY-MM-DD")
+            }
+
+
+            if (startEvent) {
+                const m = moment(startEvent, "HH:mm", true);
+                if (!m.isValid()) {
+                    await interaction.reply("❌ Date invalide ! Utilise le format HH:mm");
+                    return;
+                }
+                startHour = m.format("HH:mm");
+            }
+            dateSend = dateDay + 'T' + startHour + ":00"
+
+            if (endEvent) {
+                const m = moment(endEvent, "HH:mm", true);
+                if (!m.isValid()) {
+                    await interaction.reply("❌ Date invalide ! Utilise le format HH:mm");
+                    return;
+                }
+                hourEnd = m.format("HH:mm");
+            }
+
+            dateEnd = dateDay + 'T' + hourEnd + ":00"
+
+            let start = moment(dateSend, moment.ISO_8601, true)
+            let end = moment(dateEnd, moment.ISO_8601, true)
+
+
+            if (start > end) {
+                await interaction.reply("❌ le debut de l'evenement ne peux pas etre après la fin");
                 return;
             }
-            dateMoment = m.format('LL')
-            dateDay = m.format("YYYY-MM-DD")
-        }
 
 
-        if (startEvent) {
-            const m = moment(startEvent, "HH:mm", true);
-            if (!m.isValid()) {
-                await interaction.reply("❌ Date invalide ! Utilise le format HH:mm");
-                return;
-            }
-            startHour = m.format("HH:mm");
-        }
-        dateSend = dateDay + 'T' + startHour + ":00"
-
-        if (endEvent) {
-            const m = moment(endEvent, "HH:mm", true);
-            if (!m.isValid()) {
-                await interaction.reply("❌ Date invalide ! Utilise le format HH:mm");
-                return;
-            }
-            hourEnd = m.format("HH:mm");
-        }
-
-        dateEnd = dateDay + 'T' + hourEnd + ":00"
-
-        let start = moment(dateSend, moment.ISO_8601, true)
-        let end = moment(dateEnd, moment.ISO_8601, true)
-
-
-        if (start > end) {
-            await interaction.reply("❌ le debut de l'evenement ne peux pas etre après la fin");
-            return;
-        }
-
-
-        const message = `📅 Nouvel événement ajouté : 
+            const message = `📅 Nouvel événement ajouté : 
         - Magasin : ${storeName}
         - Événement : ${eventName}
         - Date : ${dateMoment}
         `
-        const messageEmbed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setTitle('📅 Nouvel événement ajouté : ' + eventName)
-            .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
-            .setAuthor({ name: storeName, iconURL: iconUSer })
-            .setDescription(eventName + " par " + storeName + " le " + dateMoment)
-            .addFields(
-                { name: 'Debut : ', value: startHour, inline: true },
-                { name: 'Fin : ', value: hourEnd, inline: true },
-            )
-            .setTimestamp()
+            const messageEmbed = new EmbedBuilder()
+                .setColor(0x0099FF)
+                .setTitle('📅 Nouvel événement ajouté : ' + eventName)
+                .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                .setAuthor({ name: storeName, iconURL: iconUSer })
+                .setDescription(eventName + " par " + storeName + " le " + dateMoment)
+                .addFields(
+                    { name: 'Debut : ', value: startHour, inline: true },
+                    { name: 'Fin : ', value: hourEnd, inline: true },
+                )
+                .setTimestamp()
 
 
-        await addEvents(storeName, eventName, dateSend, dateEnd)
+
+            // await addEvents(storeName, eventName, dateSend, dateEnd)
 
 
-        await interaction.reply({ embeds: [messageEmbed] });
+            await interaction.reply({ embeds: [messageEmbed] });
+
+        }
+    } else{
+        await interaction.reply(
+            {
+                content: '❌ Vous n\'êtes pas autorisé à utiliser cette commande, vous ne possédez pas les rôles requis.',
+                flags: 64  
+
+            }
+        );
 
     }
+
+
+   
 });
 
 //Affiche les 20 derniers événements
@@ -208,15 +231,21 @@ client.on(Events.InteractionCreate, async interaction => {
 
                 if (events.length === 1) {
 
-                    await interaction.reply({ embeds: [oneEvent], ephemeral: true });
+                    await interaction.reply({ embeds: [oneEvent], flags: 64 
+    
+                     });
 
 
                 } else {
-                    await interaction.reply({ embeds: [manyEvent], ephemeral: true });
+                    await interaction.reply({ embeds: [manyEvent], flags: 64 
+    
+                     });
                 }
 
             } else {
-                await interaction.reply({ content: 'Il n\'y a pas d\'événement pour le moment.', ephemeral: true });
+                await interaction.reply({ content: 'Il n\'y a pas d\'événement pour le moment.', flags: 64 
+
+                 });
             }
 
 
