@@ -113,6 +113,8 @@ client.on(Events.InteractionCreate, async interaction => {
             let dateSend = 'Non précisée';
             let iconUSer = interaction.user.avatarURL()
 
+            dateEvent = dateEvent.replace(/\//g, '-');
+
 
             if (dateEvent) {
                 const m = moment(dateEvent, "DD-MM-YYYY", true);
@@ -182,11 +184,11 @@ client.on(Events.InteractionCreate, async interaction => {
             await interaction.reply({ embeds: [messageEmbed] });
 
         }
-    } else{
+    } else {
         await interaction.reply(
             {
                 content: '❌ Vous n\'êtes pas autorisé à utiliser cette commande, vous ne possédez pas les rôles requis.',
-                flags: 64  
+                flags: 64
 
             }
         );
@@ -194,7 +196,7 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
 
-   
+
 });
 
 //Affiche les 20 derniers événements
@@ -231,21 +233,24 @@ client.on(Events.InteractionCreate, async interaction => {
 
                 if (events.length === 1) {
 
-                    await interaction.reply({ embeds: [oneEvent], flags: 64 
-    
-                     });
+                    await interaction.reply({
+                        embeds: [oneEvent], flags: 64
+
+                    });
 
 
                 } else {
-                    await interaction.reply({ embeds: [manyEvent], flags: 64 
-    
-                     });
+                    await interaction.reply({
+                        embeds: [manyEvent], flags: 64
+
+                    });
                 }
 
             } else {
-                await interaction.reply({ content: 'Il n\'y a pas d\'événement pour le moment.', flags: 64 
+                await interaction.reply({
+                    content: 'Il n\'y a pas d\'événement pour le moment.', flags: 64
 
-                 });
+                });
             }
 
 

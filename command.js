@@ -57,7 +57,7 @@ const commands = [
             },
             {
                 name: "date",
-                description: "date of the event : format DD-MM-YYYY  ",
+                description: "date of the event : format DD/MM/YYYY",
                 type: 3,
                 required: true,
 
