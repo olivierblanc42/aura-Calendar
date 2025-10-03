@@ -1,6 +1,7 @@
 
 import {
-    Client, GatewayIntentBits, Partials, Events, Guild, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, EmbedBuilder
+    Client, GatewayIntentBits, Partials, Events, Guild, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, EmbedBuilder,
+    roleMention
 } from "discord.js";
 import { Documentation } from "./documentation.js";
 import moment from "moment";
@@ -19,10 +20,10 @@ const documentation = Documentation;
 //On crée une instance du client
 const client = new Client({
     intents: [
-        GatewayIntentBits.Guilds,        // Nous autorise à accéder au serveur
-        GatewayIntentBits.GuildMessages,  // Nous autorise à accéder au message
-        GatewayIntentBits.MessageContent,   // Nous autorise à accéder au contenu du message
-        GatewayIntentBits.GuildMessageReactions  // Nous autorise à accéder aux réactions du contenu
+        GatewayIntentBits.Guilds,       
+        GatewayIntentBits.GuildMessages,  
+        GatewayIntentBits.MessageContent,   
+        GatewayIntentBits.GuildMessageReactions  
     ],
     partials: [
         Partials.Message,
@@ -112,10 +113,15 @@ client.on(Events.InteractionCreate, async interaction => {
             let dateEnd = 'Non précisée';
             let dateSend = 'Non précisée';
             let iconUSer = interaction.user.avatarURL()
-
+              
             dateEvent = dateEvent.replace(/\//g, '-');
+            let rolePing ='1422877250247721063'
+        
+            
 
 
+
+            
             if (dateEvent) {
                 const m = moment(dateEvent, "DD-MM-YYYY", true);
 
@@ -179,9 +185,11 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
             // await addEvents(storeName, eventName, dateSend, dateEnd)
+            console.log(rolePing);
+            
 
-
-            await interaction.reply({ embeds: [messageEmbed] });
+            await interaction.reply({
+                content: " <@&" + rolePing +">", embeds: [messageEmbed], allowedMentions: { parse: [], roles: [rolePing] , repliedUser: true } });
 
         }
     } else {
