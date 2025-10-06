@@ -50,6 +50,17 @@ const commands = [
 
             },
             {
+                name: "type-name",
+                description: "event type",
+                type: 3,
+                required: true,
+                choices: [
+                    { name: "TCG", value: "TCG" },
+                    { name: "VGC", value: "VGC" },
+                    { name: "POGO", value: "POGO" },
+                ]
+            },
+            {
                 name: "event-name",
                 description: "event name",
                 type: 3,

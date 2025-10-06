@@ -95,14 +95,16 @@ client.on(Events.InteractionCreate, async interaction => {
     let userName = member.map((role) => role.name);
     const modo = (element) => element === "Moderateur"
     const boutique = (element) => element === "Gérant boutique"
+    // let rolePing = '1422877250247721063'
 
 
-
+   
 
     if (userName.some(modo) || userName.some(boutique)) {
         if (interaction.commandName === 'event') {
             let eventName = interaction.options.getString("event-name");
             let storeName = interaction.options.getString("store");
+            let typeEvent = interaction.options.getString("type-name");
             let dateEvent = interaction.options.getString("date");
             let startEvent = interaction.options.getString("start-event")
             let endEvent = interaction.options.getString("end-event")
@@ -113,12 +115,12 @@ client.on(Events.InteractionCreate, async interaction => {
             let dateEnd = 'Non précisée';
             let dateSend = 'Non précisée';
             let iconUSer = interaction.user.avatarURL()
-              
-            dateEvent = dateEvent.replace(/\//g, '-');
-            let rolePing ='1422877250247721063'
-        
-            
+            let sendTypeEvent = 'Non précisée';
 
+
+
+            dateEvent = dateEvent.replace(/\//g, '-');
+  
 
 
             
@@ -165,11 +167,6 @@ client.on(Events.InteractionCreate, async interaction => {
             }
 
 
-            const message = `📅 Nouvel événement ajouté : 
-        - Magasin : ${storeName}
-        - Événement : ${eventName}
-        - Date : ${dateMoment}
-        `
             const messageEmbed = new EmbedBuilder()
                 .setColor(0x0099FF)
                 .setTitle('📅 Nouvel événement ajouté : ' + eventName)
@@ -185,11 +182,16 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
             // await addEvents(storeName, eventName, dateSend, dateEnd)
-            console.log(rolePing);
-            
 
+
+            // 
+        //     await interaction.reply({
+        //         content: " <@&" + rolePing + ">", embeds: [messageEmbed], allowedMentions: { parse: [], roles: [rolePing], repliedUser: true }
+        //     });
+
+        // }
             await interaction.reply({
-                content: " <@&" + rolePing +">", embeds: [messageEmbed], allowedMentions: { parse: [], roles: [rolePing] , repliedUser: true } });
+               embeds: [messageEmbed], allowedMentions: { parse: [], roles: [] , repliedUser: true } });
 
         }
     } else {
