@@ -102,12 +102,14 @@ client.on(Events.InteractionCreate, async interaction => {
 
     if (userName.some(modo) || userName.some(boutique)) {
         if (interaction.commandName === 'event') {
+
             let eventName = interaction.options.getString("event-name");
             let storeName = interaction.options.getString("store");
             let typeEvent = interaction.options.getString("type-name");
             let dateEvent = interaction.options.getString("date");
             let startEvent = interaction.options.getString("start-event")
             let endEvent = interaction.options.getString("end-event")
+
             let dateMoment = 'Non précisée';
             let dateDay = 'Non précisée';
             let startHour = 'Non précisée';
@@ -181,7 +183,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
 
-            // await addEvents(storeName, eventName, dateSend, dateEnd)
+            await addEvents(storeName, eventName, dateSend, dateEnd)
 
 
             // 
