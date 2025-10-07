@@ -13,7 +13,19 @@ import "moment/locale/fr.js";
 import "dotenv/config";
 import { listEvents, addEvents } from './googleCalendar.js';
 import { content } from "googleapis/build/src/apis/content/index.js";
+import express from "express";
 
+const app = express();
+
+app.get("/", (req, res) => {
+    res.send("Bot Aura Calendar is running!");
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`✅ Web server started on port ${PORT}`);
+});
 moment.locale("fr");
 
 
