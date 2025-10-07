@@ -264,7 +264,6 @@ client.on(Events.InteractionCreate, async interaction => {
             // Retrieve events from Google Calendar
             const events = await listEvents();
             const allEvents = events.join("\n")
-            console.log(events.length)
 
 
             if (events.length > 0) {
