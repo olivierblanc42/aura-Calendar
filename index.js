@@ -61,12 +61,17 @@ client.on(Events.ClientReady, readyClient => {
 
 
 
-// ==============================
-// Command 'aide'
-// ==============================
+
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
+    const channel = await interaction.client.channels.fetch('1419578434543288320');
+
+
+
+    // ==============================
+    // Command 'aide'
+    // ==============================
 
     // When the user runs /aide
     if (interaction.commandName === 'aide') {
@@ -85,14 +90,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
     }
 
-})
-
-// ==============================
-// COMMAND 'calendar'
-// ==============================
-
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    // ==============================
+    // COMMAND 'calendar'
+    // ==============================
 
     // Creating a button to open Google Calendar
     const calendar = new ButtonBuilder()
@@ -103,6 +103,10 @@ client.on(Events.InteractionCreate, async interaction => {
         .addComponents(calendar);
     if (interaction.commandName === "calendar") {
         // Send button to the channel
+
+
+
+
         await interaction.reply({
             content: 'Cliquez ici pour voir le calendrier',
             components: [row],
@@ -110,13 +114,9 @@ client.on(Events.InteractionCreate, async interaction => {
         });
     }
 
-})
-
-// ==============================
-// Command 'event' 
-// ==============================
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    // ==============================
+    // Command 'event'
+    // ==============================
 
     //Check if the user has the required roles
     const member = interaction.member.roles.cache;
@@ -124,9 +124,6 @@ client.on(Events.InteractionCreate, async interaction => {
     const modo = (element) => element === "Moderateur"
     const boutique = (element) => element === "Gérant boutique"
     // let rolePing = '1422877250247721063'
-
-
-
 
     if (userName.some(modo) || userName.some(boutique)) {
         if (interaction.commandName === 'event') {
@@ -182,7 +179,6 @@ client.on(Events.InteractionCreate, async interaction => {
 
                 startHour = m.format("HH:mm");
             }
-
 
 
             // End event validation
@@ -256,22 +252,11 @@ client.on(Events.InteractionCreate, async interaction => {
 
     }
 
-
-
-});
-
-// ==============================
-// Command 'see-event'
-// ==============================
-
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-
-
+    // ==============================
+    // Command 'see-event'
+    // ==============================
 
     if (interaction.commandName === 'see-event') {
-
-
         try {
             // Retrieve events from Google Calendar
             const events = await listEvents();
@@ -327,9 +312,12 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
     }
-});
+
+})
+
+
 
 // ==============================
-// On connecte le bot
+// connect the bot 
 // ==============================
 client.login(process.env.DISCORD_TOKEN);
