@@ -29,6 +29,7 @@ app.listen(PORT, () => {
 moment.locale("fr");
 
 
+//Constant to retrieve the documentation
 const documentation = Documentation;
 
 
@@ -67,65 +68,28 @@ client.on(Events.InteractionCreate, async interaction => {
 
     const channel = await interaction.client.channels.fetch('1419578434543288320');
 
-
-
-    // ==============================
-    // Command 'aide'
-    // ==============================
-
-    // When the user runs /aide
-    if (interaction.commandName === 'aide') {
-        // Build the command list and descriptions from the documentation file
-        let finalString = "";
-        if (documentation.entries.length > 0) {
-            const entriesText = documentation.entries;
-
-            entriesText.forEach(element => {
-                finalString += element.command + ": " + element.description + "\n"
-
-            });
-        }
-        // Send documentation to the channel
-        await interaction.reply("Documentation Bot Aura Calendar :" + "\n" + finalString);
-
-    }
-
-    // ==============================
-    // COMMAND 'calendar'
-    // ==============================
-
-    // Creating a button to open Google Calendar
     const calendar = new ButtonBuilder()
         .setLabel('Callendrier')
         .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
         .setStyle(ButtonStyle.Link)
     const row = new ActionRowBuilder()
         .addComponents(calendar);
-    if (interaction.commandName === "calendar") {
-        // Send button to the channel
 
 
+ 
 
-
-        await interaction.reply({
-            content: 'Cliquez ici pour voir le calendrier',
-            components: [row],
-            flags: MessageFlags.Ephemeral
-        });
-    }
-
-    // ==============================
-    // Command 'event'
-    // ==============================
-
-    //Check if the user has the required roles
     const member = interaction.member.roles.cache;
     const userName = member.map((role) => role.name);
-    const modo = (element) => element === "Moderateur"
+    const modo = (element) => element === "Modérateur"
     const boutique = (element) => element === "Gérant boutique"
     // let rolePing = '1422877250247721063'
 
-    if (userName.some(modo) || userName.some(boutique)) {
+    if (userName.some(modo) ) {
+        // ==============================
+        // Command 'event'
+        //Check if the user has the required roles
+        // ==============================
+
         if (interaction.commandName === 'event') {
             // Get the options from the command
             let eventName = interaction.options.getString("event-name");
@@ -239,6 +203,119 @@ client.on(Events.InteractionCreate, async interaction => {
             });
 
         }
+
+
+        // ==============================
+        // Command 'see-event'
+        // ==============================
+
+        if (interaction.commandName === 'see-event') {
+            try {
+                // Retrieve events from Google Calendar
+                const events = await listEvents();
+                const allEvents = events.join("\n")
+
+
+                if (events.length > 0) {
+                    //Create different embeds depending on whether there is one or multiple events
+
+                    const manyEvent = new EmbedBuilder()
+                        .setColor(0x0099FF)
+                        .setTitle('📅 Liste des événements')
+                        .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                        .setDescription(allEvents)
+                        .setTimestamp()
+
+                    const oneEvent = new EmbedBuilder()
+                        .setColor(0x0099FF)
+                        .setTitle('📅 Événement à venir')
+                        .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
+                        .setDescription(allEvents)
+                        .setTimestamp()
+
+                    if (events.length === 1) {
+                        // Send the embed message if there is one event
+                        await interaction.reply({
+                            embeds: [oneEvent], flags: 64
+                        });
+
+
+                    } else {
+                        // Send the embed message if there are two or more events
+                        await interaction.reply({
+                            embeds: [manyEvent], flags: 64
+
+                        });
+                    }
+
+                } else {
+                    // Send the embed message for 0 event
+                    await interaction.reply({
+                        content: 'Il n\'y a pas d\'événement pour le moment.', flags: 64
+
+                    });
+                }
+
+
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des événements :', error);
+            }
+
+
+
+        }
+
+        // ==============================
+        // COMMAND 'calendar'
+        // Creating a button to open Google Calendar
+        // ==============================
+
+
+        if (interaction.commandName === "calendar") {
+            // Send button to the channel
+
+
+
+
+            await interaction.reply({
+                content: 'Cliquez ici pour voir le calendrier',
+                components: [row],
+                flags: MessageFlags.Ephemeral
+            });
+        }
+
+
+        // ==============================
+        // Command 'aide'
+        // ==============================
+
+        // When the user runs /aide
+        if (interaction.commandName === 'aide') {
+            // Build the command list and descriptions from the documentation file
+            if (documentation.entries.length > 0) {
+                const messageEmbed = new EmbedBuilder()
+                    .setColor(0x0099FF)
+                    .setDescription("Documentation du bot aura calendar")
+                    .addFields(
+                        Documentation.entries.map(entry => ({
+                            name: `/${entry.command}`,
+                            value: entry.description,
+                            inline: false
+                        }))
+                    )
+                  
+                // Send documentation to the channel
+                await interaction.reply({
+                    embeds: [messageEmbed]
+                });
+            }
+  
+
+        }
+
+
+
     } else {
         //Send reply if the user doesn't have the required roles
 
@@ -252,66 +329,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
     }
 
-    // ==============================
-    // Command 'see-event'
-    // ==============================
 
-    if (interaction.commandName === 'see-event') {
-        try {
-            // Retrieve events from Google Calendar
-            const events = await listEvents();
-            const allEvents = events.join("\n")
-
-
-            if (events.length > 0) {
-                //Create different embeds depending on whether there is one or multiple events
-
-                const manyEvent = new EmbedBuilder()
-                    .setColor(0x0099FF)
-                    .setTitle('📅 Liste des événements')
-                    .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
-                    .setDescription(allEvents)
-                    .setTimestamp()
-
-                const oneEvent = new EmbedBuilder()
-                    .setColor(0x0099FF)
-                    .setTitle('📅 Événement à venir')
-                    .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
-                    .setDescription(allEvents)
-                    .setTimestamp()
-
-                if (events.length === 1) {
-                    // Send the embed message if there is one event
-                    await interaction.reply({
-                        embeds: [oneEvent], flags: 64
-                    });
-
-
-                } else {
-                    // Send the embed message if there are two or more events
-                    await interaction.reply({
-                        embeds: [manyEvent], flags: 64
-
-                    });
-                }
-
-            } else {
-                // Send the embed message for 0 event
-                await interaction.reply({
-                    content: 'Il n\'y a pas d\'événement pour le moment.', flags: 64
-
-                });
-            }
-
-
-
-        } catch (error) {
-            console.error('Erreur lors de la récupération des événements :', error);
-        }
-
-
-
-    }
 
 })
 
@@ -321,3 +339,5 @@ client.on(Events.InteractionCreate, async interaction => {
 // connect the bot 
 // ==============================
 client.login(process.env.DISCORD_TOKEN);
+
+
