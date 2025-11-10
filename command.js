@@ -7,20 +7,20 @@ const commands = [
         description: 'affiche la documentation',
     },
     {
-        name: 'calendar',
+        name: 'calendrier',
         description: 'donne le lien du calendrier',
     },
     {
-        name: 'see-event',
+        name: 'voir-evenement',
         description: 'voit les dernier evenement du calendrier',
     },
     {
-        name: 'event',
+        name: 'creer-evenement',
         description: 'Ajout d\'un évènement',
         options: [
             {
-                name: "store",
-                description: "store name",
+                name: "magasin",
+                description: "Nom du magasin",
                 type: 3,
                 required: true,
                 choices: [
@@ -46,8 +46,8 @@ const commands = [
 
             },
             {
-                name: "type-name",
-                description: "event type",
+                name: "type-evenement",
+                description: "Type d'événement",
                 type: 3,
                 required: true,
                 choices: [
@@ -57,28 +57,28 @@ const commands = [
                 ]
             },
             {
-                name: "event-name",
-                description: "event name",
+                name: "nom-evenement",
+                description: "Nom de l'événement",
                 type: 3,
                 required: true
             },
             {
                 name: "date",
-                description: "date of the event : format DD/MM/YYYY",
+                description: "Date de l'événement : format DD/MM/YYYY",
                 type: 3,
                 required: true,
 
             },
             {
-                name: "start-event",
-                description: "start-event : format HH:mm",
+                name: "debut",
+                description: "Heure de début : format HH:mm",
                 type: 3,
                 required: true,
 
             },
             {
-                name: "end-event",
-                description: "start-event : format HH:mm",
+                name: "fin",
+                description: "Heure de fin : format HH:mm",
                 type: 3,
                 required: true,
 
@@ -100,3 +100,4 @@ try {
 } catch (error) {
     console.error(error);
 }
+

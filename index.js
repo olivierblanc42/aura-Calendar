@@ -86,18 +86,18 @@ client.on(Events.InteractionCreate, async interaction => {
 
     if (userName.some(modo) ) {
         // ==============================
-        // Command 'event'
+        // Command 'creer-evenement'
         //Check if the user has the required roles
         // ==============================
 
-        if (interaction.commandName === 'event') {
+        if (interaction.commandName === 'creer-evenement') {
             // Get the options from the command
-            let eventName = interaction.options.getString("event-name");
-            let storeName = interaction.options.getString("store");
-            let typeEvent = interaction.options.getString("type-name");
+            let eventName = interaction.options.getString("nom-evenement");;
+            let storeName = interaction.options.getString("magasin");
+            let typeEvent = interaction.options.getString("type-evenement");
             let dateEvent = interaction.options.getString("date");
-            let startEvent = interaction.options.getString("start-event")
-            let endEvent = interaction.options.getString("end-event")
+            let startEvent = interaction.options.getString("debut");
+            let endEvent = interaction.options.getString("fin");
 
 
 
@@ -108,13 +108,12 @@ client.on(Events.InteractionCreate, async interaction => {
             let dateEnd = 'Non précisée';
             let dateSend = 'Non précisée';
             let iconUSer = interaction.user.avatarURL()
-            let sendTypeEvent = 'Non précisée';
 
 
             // swap slashes for dashes
             dateEvent = dateEvent.replace(/\//g, '-');
 
-
+         
 
             // Validation of dates and times with moment.js
 
@@ -175,7 +174,7 @@ client.on(Events.InteractionCreate, async interaction => {
             //Create the embed for the event message
             const messageEmbed = new EmbedBuilder()
                 .setColor(0x0099FF)
-                .setTitle('📅 Nouvel événement ajouté : ' + eventName)
+                .setTitle('📅 Nouvel événement ajouté : ' + typeEvent + eventName)
                 .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
                 .setAuthor({ name: storeName, iconURL: iconUSer })
                 .setDescription(eventName + " par " + storeName + " le " + dateMoment)
@@ -206,10 +205,10 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
         // ==============================
-        // Command 'see-event'
+        // Command 'voir-evenement'
         // ==============================
 
-        if (interaction.commandName === 'see-event') {
+        if (interaction.commandName === 'voir-evenement') {
             try {
                 // Retrieve events from Google Calendar
                 const events = await listEvents();
@@ -267,12 +266,12 @@ client.on(Events.InteractionCreate, async interaction => {
         }
 
         // ==============================
-        // COMMAND 'calendar'
+        // COMMAND 'calendrier'
         // Creating a button to open Google Calendar
         // ==============================
 
 
-        if (interaction.commandName === "calendar") {
+        if (interaction.commandName === 'calendrier') {
             // Send button to the channel
 
 
@@ -292,8 +291,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
         // When the user runs /aide
         if (interaction.commandName === 'aide') {
-            // Build the command list and descriptions from the documentation file
             if (documentation.entries.length > 0) {
+
+                // Build the command list and descriptions from the documentation file
                 const messageEmbed = new EmbedBuilder()
                     .setColor(0x0099FF)
                     .setDescription("Documentation du bot aura calendar")
@@ -307,7 +307,7 @@ client.on(Events.InteractionCreate, async interaction => {
                   
                 // Send documentation to the channel
                 await interaction.reply({
-                    embeds: [messageEmbed]
+                    embeds: [messageEmbed],flags:64
                 });
             }
   
