@@ -71,8 +71,8 @@ const commands = [
             }
             ,
             {
-                name: "nom-evenement",
-                description: "Nom de l'événement",
+                name: "description",
+                description: "Description de l'événement",
                 type: 3,
                 required: true
             },
