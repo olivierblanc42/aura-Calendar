@@ -94,10 +94,11 @@ client.on(Events.InteractionCreate, async interaction => {
             // Get the options from the command
             let eventName = interaction.options.getString("nom-evenement");;
             let storeName = interaction.options.getString("magasin");
-            let typeEvent = interaction.options.getString("type-evenement");
+            let game = interaction.options.getString("jeu");
             let dateEvent = interaction.options.getString("date");
             let startEvent = interaction.options.getString("debut");
             let endEvent = interaction.options.getString("fin");
+            let typeEvent = interaction.options.getString("type-evenement");
 
 
 
@@ -108,6 +109,7 @@ client.on(Events.InteractionCreate, async interaction => {
             let dateEnd = 'Non précisée';
             let dateSend = 'Non précisée';
             let iconUSer = interaction.user.avatarURL()
+            let sendgame = 'Non précisée';
 
 
             // swap slashes for dashes
@@ -174,7 +176,7 @@ client.on(Events.InteractionCreate, async interaction => {
             //Create the embed for the event message
             const messageEmbed = new EmbedBuilder()
                 .setColor(0x0099FF)
-                .setTitle('📅 Nouvel événement ajouté : ' + typeEvent + eventName)
+                .setTitle('📅 Nouvel événement ajouté : ' + game + " " + typeEvent)
                 .setURL('https://calendar.google.com/calendar/u/0?cid=ZTExODMyYzUwM2Q3ZjgyZDYwZGQxZTViYjIzNGFlOTJlNmE5NjAxNjBhM2Q1MDg3NGQzZTkyZjU5YjJmYzdkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t')
                 .setAuthor({ name: storeName, iconURL: iconUSer })
                 .setDescription(eventName + " par " + storeName + " le " + dateMoment)
@@ -186,7 +188,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
             //Add event in Google Calendar
-            await addEvents(storeName, eventName, dateSend, dateEnd)
+            await addEvents(storeName, eventName, dateSend, dateEnd,game,typeEvent)
 
 
             //Send reply for event creation

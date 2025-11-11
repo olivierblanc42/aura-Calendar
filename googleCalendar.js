@@ -39,8 +39,9 @@ export async function listEvents() {
 
 
 // Adds a new event to Google Calendar with the given shop, title, start, and end time
-export async function addEvents(boutique ,evenement,start,end) {
-    let summary = boutique +" : " + evenement ;
+
+export async function addEvents(boutique, evenement, start, end, game) {
+    let summary = boutique + " : " + game +" " + evenement ;
     const auth = new google.auth.GoogleAuth({
         credentials: {
             type: 'service_account',

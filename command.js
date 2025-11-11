@@ -46,8 +46,8 @@ const commands = [
 
             },
             {
-                name: "type-evenement",
-                description: "Type d'événement",
+                name: "jeu",
+                description: "le jeu",
                 type: 3,
                 required: true,
                 choices: [
@@ -56,6 +56,20 @@ const commands = [
                     { name: "POGO", value: "POGO" },
                 ]
             },
+            {
+                name: "type-evenement",
+                description: "Type d'événement",
+                type: 3,
+                required: true,
+                choices: [
+                    { name: "Avant-première", value: "avant-première" },
+                    { name: "Ligue ", value: "Ligue " },
+                    { name: "League challenge", value: "League challenge" },
+                    { name: "League cup", value: "League cup" },
+                    { name: "Initiation", value: "Initiation" }
+                ]
+            }
+            ,
             {
                 name: "nom-evenement",
                 description: "Nom de l'événement",
@@ -94,8 +108,13 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 try {
     console.log('Started refreshing application (/) commands.');
 
-    await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), { body: commands });
+    await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DISCORD_SERVEUR), { body: commands });
 
+        // rest
+        //     .put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DISCORD_SERVEUR), { body: [] })
+        //     .then(() => console.log('Successfully deleted all guild commands.'))
+        //     .catch(console.error);
+            
     console.log('Successfully reloaded application (/) commands.');
 } catch (error) {
     console.error(error);
